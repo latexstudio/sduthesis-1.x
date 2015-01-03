@@ -113,3 +113,7 @@ sduthesis/
 
 # Apple
 .DS_Store
+
+# test env
+sduthesis.cls
+sduthesis.pdf
