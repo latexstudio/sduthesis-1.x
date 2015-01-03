@@ -110,3 +110,6 @@ sympy-plots-for-*.tex/
 
 # The Release Folder
 sduthesis/
+
+# Apple
+.DS_Store
