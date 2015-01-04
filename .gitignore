@@ -119,3 +119,6 @@ sduthesis.cls
 sduthesis.pdf
 sduthesis-cover.def
 sduthesis-statement.def
+make
+quickmake
+sduthesis-demo*
