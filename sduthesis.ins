@@ -66,6 +66,10 @@ and the derived files           \jobname.ins,
   \usedir{tex/latex/\jobname/def}%
   \file{\jobname-cover.def}{\from{\jobname.dtx}{cover}}%
   \file{\jobname-statement.def}{\from{\jobname.dtx}{statement}}%
+  \usedir{doc/latex/\jobname}%
+  \nopreamble\nopostamble
+  \file{README.md}{\from{\jobname.dtx}{readme}}%
+  \file{LICENSE.md}{\from{\jobname.dtx}{license}}%
 }
 
 \Msg{*********************************************************}
