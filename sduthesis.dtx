@@ -33,24 +33,29 @@
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
+\usepackage[UTF8, fntef]{ctexcap}
+\newcommand{\pkg}[1]{\textsf{#1}}
+\usepackage{hologo}
+\newcommand{\XeLaTeX}{\hologo{XeLaTeX}}
 \begin{document}
-  \DocInput{sduthesis.dtx}
+  \DocInput{\jobname.dtx}
 \end{document}
 %</driver>
 % \fi
 %
 % \CheckSum{0}
 %
-% \changes{v1.0}{YYYY/MM/DD}{Initial version}
+% \changes{v1.0}{2013/05/12}{The first public release.}
 %
-% \GetFileInfo{sduthesis.dtx}
+% \GetFileInfo{\jobname.dtx}
 %
 % \DoNotIndex{\test}
 %
-% \title{The \textsf{sduthesis} class\thanks{This Document
-%   corresponds to \textsf{sduthesis}~\fileversion,
+% \title{The \textsf{\jobname} class\thanks{This Document
+%   corresponds to \textsf{\jobname}~\fileversion,
 %   dated \filedate.}}
-% \author{Liam Huang \\ \texttt{liamhuang0205+sduthesis@gmail.com}}
+% \author{Liam Huang \\ \texttt{liamhuang0205+\jobname@gmail.com}}
+% \date{\filedate}
 %
 % \maketitle
 %
@@ -58,7 +63,7 @@
 %   Put text here.
 % \end{abstract}
 %
-% \section{Useage}
+% \section{Usage}
 %
 % \DescribeMacro{\YOURMARCO}
 %
@@ -70,20 +75,422 @@
 %
 % \StopEventually{\PrintIndex}
 %
-% \section{Implementation}
+% \section{代码实现}
 %
-% \begin{macro}{\YOURMACRO}
-% Put explanation of |\YOURMACRO|’s implementation here.
 %    \begin{macrocode}
-\newcommand{\YOURMACRO}{}
+%<*class>
+%    \end{macrocode}
+% 载入 \pkg{kvoptions} 宏包，并进行相关设置。
+%    \begin{macrocode}
+\RequirePackage{kvoptions}
+\RequirePackage{etoolbox}
+\SetupKeyvalOptions{family=SDU, prefix=SDU@opt@, setkeys=\kvsetkeys}
+\newcommand{\ekv}[1]{\kvsetkeys{SDU}{#1}}
+%    \end{macrocode}
+% 声明选项。
+%    \begin{macrocode}
+\DeclareBoolOption[true]{chsstyle}
+\DeclareComplementaryOption{nochsstyle}{chsstyle}
+\DeclareBoolOption[false]{print}
+\DeclareComplementaryOption{noprint}{print}
+\DeclareBoolOption[true]{double}
+\DeclareComplementaryOption{single}{double}
+\DeclareDefaultOption{\PassOptionsToPackage{\CurrentOption}{ctexcap}}
+\LoadClass{ctexbook}
+\ProcessKeyvalOptions*\relax
+\ifSDU@opt@double\relax\else
+  \PassOptionsToClass{a4paper, cs4size, UTF8}{ctexbook}
+\fi
+%    \end{macrocode}
+% 载入所需宏包。
+%    \begin{macrocode}
+\RequirePackage{ifpdf,ifxetex}
+\RequirePackage{geometry}
+\RequirePackage{fancyhdr}
+\RequirePackage{amsmath}
+\RequirePackage{amsfonts}
+\RequirePackage{amsthm}
+\RequirePackage{amssymb}
+\RequirePackage{amsbsy}
+\RequirePackage{bm}
+\RequirePackage{mathrsfs}
+\RequirePackage{booktabs}
+\RequirePackage{amsmath}
+\RequirePackage{hyperref}
+\ifxetex
+  \RequirePackage{graphicx}
+\else
+  \ifpdf
+    \RequirePackage{graphicx}
+    \RequirePackage{epstopdf}
+  \else
+    \RequirePackage[dvipdfmx]{graphicx}
+    \RequirePackage{bmpsize}
+  \fi
+\fi
+\RequirePackage{xcolor}
+\RequirePackage{makecell}
+%    \end{macrocode}
+% \begin{macro}{\fzbHei}
+% 调用「方正大黑简体」作为封面大标题字体。
+%
+% 学校提供的 M\$ Word 版封皮，标题字体使用的是方正大黑简体。
+% 然而，由于大多数的计算机，特别是学校内和学校周边的打印室没有安装这个字
+% 体，因此在实际打印时，使用「中易黑体」代替。在使用 \XeLaTeX{} 时，模
+% 板使用方正大黑简体；而在使用 pdf\LaTeX{} 或 \LaTeX{} 时，由于技术
+% 原因，使用黑体代替。
+%    \begin{macrocode}
+\ifxetex
+  \newCJKfontfamily[fzbighei]{\fzbHei}{FZDHTJW.ttf}
+\else
+  \newcommand{\fzbHei}{\heiti}
+\fi
 %    \end{macrocode}
 % \end{macro}
-% \begin{environment}{YOURENV}
-% Put explanation of |YOURENV|’s implementation here.
+% 行距设置。
 %    \begin{macrocode}
-\newenvironment{YOURENV}{}{}
+\linespread{1.3}
+%    \end{macrocode}
+% 段落间距设置。
+%    \begin{macrocode}
+\setlength{\parskip}{0.3ex}
+%    \end{macrocode}
+% 页面布局及页边距设置。
+%    \begin{macrocode}
+\ifSDU@opt@double
+  \geometry{left=3.75cm, right=1.75cm, top=3cm, bottom=3cm}
+\else
+  \geometry{left=2.75cm, right=2.75cm, top=3cm, bottom=3cm}
+\fi
+%    \end{macrocode}
+% 页眉和页脚设置。
+%    \begin{macrocode}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrule}{%
+  \hrule\@height1.5pt\@width\headwidth%
+  \vskip1pt%
+  \hrule\@height\headrulewidth\@width\headwidth%
+}
+\fancyhead[C]{%
+  \ifSDU@opt@chsstyle
+    \chead{\zihao{5}山东大学学士学位论文}
+  \else
+    \chead{\small Shandong University Bachelor Thesis}
+  \fi
+}
+\fancyfoot[OR, EL]{--~{\thepage}~--}
+%    \end{macrocode}
+% 数学环境特殊符号的定义。
+%    \begin{macrocode}
+\newcommand*{\me}{\ensuremath{\mathrm{e}}}
+\newcommand*{\mi}{\ensuremath{\mathrm{i}}}
+\newcommand*{\dif}{\ensuremath{\mathop{}\!\mathrm{d}}}
+\DeclareMathAlphabet{\mathsfsl}{OT1}{cmss}{m}{sl}
+\newcommand*{\VEC}[1]{\ensuremath{\boldsymbol{#1}}}
+\newcommand*{\MATRIX}[1]{\ensuremath{\mathsfsl{#1}}}
+\newcommand*{\TENSOR}[1]{\ensuremath{\mathsfsl{#1}}}
+\newcommand*{\HUA}[1]{\ensuremath{\mathscr{{#1}}}}
+\newcommand*{\SHUANG}[1]{\ensuremath{\mathbb{{#1}}}}
+%    \end{macrocode}
+%    \begin{macrocode}
+\numberwithin{equation}{chapter}
+%    \end{macrocode}
+% 设置图档搜索路径。
+%    \begin{macrocode}
+\graphicspath{{figures/}{figure/}{pictures/}
+      {picture/}{pic/}{pics/}{image/}{images/}}
+%    \end{macrocode}
+% 浮动体设置。
+%    \begin{macrocode}
+\numberwithin{figure}{chapter}
+\numberwithin{table}{chapter}
+\newcommand{\figcaption}{\def\@captype{figure}\caption}
+\newcommand{\tabcaption}{\def\@captype{table}\caption}
+%    \end{macrocode}
+% 交叉引用设置。
+% 使用颜色作为链接标识，设置颜色为蓝色。如果开启 |print| 模式，则
+% 启用 |\hypersetup{hidelinks}|。
+%    \begin{macrocode}
+\hypersetup{colorlinks=true}
+\hypersetup{linkcolor=black}
+\ifSDU@opt@print
+  \hypersetup{allcolors=black}
+\else\relax\fi
+%    \end{macrocode}
+%
+% \begin{macro}{\upcite}
+% 定义参考文献上标引用。
+% \end{macro}
+%    \begin{macrocode}
+\newcommand{\upcite}[1]{\textsuperscript{\cite{#1}}}
+%    \end{macrocode}
+% \begin{macro}{\enabstractname}
+% 英文摘要标题的名字，默认是全部大写的 |ABSTRACT|，可以自行
+% 用 \cs{renewcommand} 修改。
+%    \begin{macrocode}
+\newcommand\enabstractname{ABSTRACT}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\enkeywordsname}
+% 英文关键字的名字。
+%    \begin{macrocode}
+\newcommand\enkeywordsname{Key words}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\enkeywords}
+% 英文关键字命令。用法是 \cs{enkeywords}\marg{关键字列表}。
+%    \begin{macrocode}
+\newcommand\enkeywords[1]{%
+  \vspace{1cm}\noindent{\bfseries\zihao{-4}\enkeywordsname: }#1}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\cnabstractname}
+% 中文摘要标题的名字，默认是|摘\quad 要|，可以自行用 \cs{renewcommand} 修改。
+%    \begin{macrocode}
+\newcommand\cnabstractname{摘\quad 要}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\cnkeywordsname}
+% 中文关键字的名字。
+%    \begin{macrocode}
+\newcommand\cnkeywordsname{关键词}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\cnkeywords}
+% 中文关键字命令。用法是 \cs{cnkeywords}\marg{关键字列表}。
+%    \begin{macrocode}
+\newcommand\cnkeywords[1]{%
+  \vspace{1cm}\noindent{\bfseries\zihao{-4}\cnkeywordsname: }#1}
+%    \end{macrocode}
+% \end{macro}
+% \begin{environment}{enabstract}
+% 英文摘要环境，按照学校要求，在结尾处分页。
+%    \begin{macrocode}
+\newenvironment{enabstract}{%
+  \newpage
+  \centering
+  \begin{minipage}{.9\textwidth}
+  \centerline{\zihao{-3}\bfseries\enabstractname}\vspace{.3cm}
+  \centering
+  \begin{minipage}{.85\textwidth}
+  \setlength{\parindent}{1.2em}
+}{
+\end{minipage}
+\end{minipage}
+\clearpage
+}
 %    \end{macrocode}
 % \end{environment}
-%
+% \begin{environment}{cnabstract}
+% 中文摘要环境，按照学校要求，在结尾处分页。
+%    \begin{macrocode}
+\newenvironment{cnabstract}{%
+  \newpage
+  \centering
+  \begin{minipage}{.9\textwidth}
+  \centerline{\zihao{-3}\bfseries\cnabstractname}\vspace{.3cm}
+  \centering
+  \begin{minipage}[c]{.85\textwidth}
+  \setlength{\parindent}{2em}
+  \zihao{-4}
+}{
+\end{minipage}
+\end{minipage}
+\clearpage
+}
+%    \end{macrocode}
+% \end{environment}
+% 中文标题风格。
+%    \begin{macrocode}
+\ifSDU@opt@chsstyle
+  \CTEXsetup[name={第,章}]{chapter}
+  \CTEXsetup[number={\chinese{chapter}}]{chapter}
+  \CTEXsetup[format={\centering}]{chapter}
+  \CTEXsetup[nameformat={\bfseries\zihao{3}}]{chapter}
+  \CTEXsetup[titleformat={\bfseries\zihao{3}}]{chapter}
+  \CTEXsetup[aftername={\quad{}}]{chapter}
+  \CTEXsetup[beforeskip={10pt}]{chapter}
+  \CTEXsetup[afterskip={10pt}]{chapter}
+  \CTEXsetup[name={$\S$\,,}]{section}
+  \CTEXsetup[format={\bfseries\flushleft\zihao{4}}]{section}
+  \CTEXsetup[format={\bfseries\flushleft\zihao{-4}}]{subsection}
+  \CTEXsetup[format={\flushleft\zihao{-4}}]{subsubsection}
+  \CTEXsetup[name={附录~}]{appendix}
+  \CTEXsetup[number={\Alph{chapter}}]{appendix}
+\else
+  \PassOptionsToClass{nocap, noindent}{ctexbook}
+\fi
+%    \end{macrocode}
+% 载入封面的定义。
+%    \begin{macrocode}
+\input{sduthesis-cover.def}
+%    \end{macrocode}
+%    \begin{macrocode}
+%</class>
+%    \end{macrocode}
+%    \begin{macrocode}
+%<*cover>
+%    \end{macrocode}
+% 定义 tokens。
+%    \begin{macrocode}
+\newtoks\fenlei     % 中图分类号
+\newtoks\DWdaihao   % 单位代号
+\newtoks\miji       % 密级
+\newtoks\StuNum     % 学号
+\newtoks\Ctitle     % 中文标题
+\newtoks\Cauthor    % 作者中文名
+\newtoks\Cmajor     % 专业
+\newtoks\Csuperver  % 导师
+\newtoks\Cdate      % 中文日期
+\newtoks\Dpart      % 学院
+\newtoks\Grade      % 年级
+%    \end{macrocode}
+% \begin{macro}{\LeftLength}
+% 姓名登记表格左列的宽度。
+%    \begin{macrocode}
+\newcommand{\LeftLength}{2.3cm}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\RightLength}
+% 姓名登记表格右列的宽度。
+%    \begin{macrocode}
+\newcommand{\RightLength}{5.5cm}
+%    \end{macrocode}
+% \end{macro}
+%    \begin{macrocode}
+\newcommand{\Mcs}[1]{\makebox[\LeftLength][s]{{\zihao{3}\bfseries\kaishu{}#1}}}
+\newcommand{\Mcc}[1]{\makebox[\RightLength][c]{{\zihao{-3}\songti{}#1}}}
+%    \end{macrocode}
+% \begin{macro}{\maketitlepage}
+% 最终输出封面的命令。
+%    \begin{macrocode}
+\newcommand{\maketitlepage}{%
+\thispagestyle{empty}
+\begin{center}
+~
+\vskip 8mm\relax
+{
+  {\includegraphics[width = .7\textwidth]{SDUWords.jpg}}\\[3mm]
+  {\scalebox{4}{\fzbHei{}毕业论文（设计）}}
+}
+\par \vskip 15mm \relax
+{
+  \begin{flushleft}
+    {\zihao{3}\heiti{}论文（设计）题目：}
+  \end{flushleft}
+}
+\vfill
+{
+  \noindent
+  \zihao{-1}\kaishu\the\Ctitle
+}
+\vfill
+{
+  \begin{tabular}{p{\LeftLength}p{\RightLength}}
+  \Mcs{姓名}& \Mcc{\the\Cauthor}\\[-.8mm]\cline{2-2}\\[-4mm]
+  \Mcs{学号}& \Mcc{\the\StuNum}\\[-.8mm]\cline{2-2}\\[-4mm]
+  \Mcs{学院}& \Mcc{\the\Dpart}\\[-.8mm]\cline{2-2}\\[-4mm]
+  \Mcs{专业}& \Mcc{\the\Cmajor}\\[-.8mm]\cline{2-2}\\[-4mm]
+  \Mcs{年级}& \Mcc{\the\Grade}\\[-.8mm]\cline{2-2}\\[-4mm]
+  \Mcs{指导老师}& \Mcc{\the\Csuperver}\\[-.8mm]\cline{2-2}
+  \end{tabular}
+}
+\par \vskip 20mm \relax
+{
+\zihao{3}\the\Cdate
+}
+\end{center}
+\clearpage
+}
+%    \end{macrocode}
+% \end{macro}
+%    \begin{macrocode}
+%</cover>
+%    \end{macrocode}
+%    \begin{macrocode}
+%<*statement>
+%    \end{macrocode}
+% \begin{macro}{\makestatement}
+% 输出诚信承诺书的命令。
+%    \begin{macrocode}
+\newcommand{\makestatement}{%
+\begin{titlepage}
+\vspace{2cm} {\zihao{4}\baselineskip=30pt
+
+\centerline{\zihao{3}\bfseries 原\quad 创\quad 性\quad 声\quad 明}
+
+\noindent\hspace*{2em}本人郑重声明：所呈交的学位论文，是本人在导师指导下，独
+立进行研究所取得的成果。除文中已经注明引用的内容外，本论文不包
+含任何其他个人或集体已经发表或撰写过的科研成果。对本论文的研究作出重
+要贡献的个人和集体，均已在文中以明确方式标明。本声明
+的法律责任由本人承担。
+
+\vspace{13mm}
+
+\noindent\hspace*{2em}论文作者签名：\hrulefill \hspace{1em}日\hspace{1em} 期：\hrulefill
+
+\vspace{2.7cm}
+
+\centerline{\zihao{3}\bfseries 关于学位论文使用授权的声明}
+
+\noindent\hspace*{2em}本人完全了解山东大学有关保留、使用学位论文的规定，同意学
+校保留或向国家有关部门或机构送交论文的复印件和电子版，允许论文被查阅
+和借阅；本人授权山东大学可以将本学位论文全部或部分内容编入有关数据库
+进行检索，可以采用影印、缩印或其他复制手段保存论文和汇编本学位论文。
+
+\noindent\hspace*{2em}（保密的论文在解密后应遵守此规定）
+
+\vspace{13mm}
+
+\noindent\hspace*{2em}论文作者签名：\hrulefill\hrulefill\hspace{0.5em} 导师签名：\hrulefill\hrulefill\hspace{0.5em}日\hspace{0.5em}期：\hrulefill \hrulefill }
+\end{titlepage}
+}
+%    \end{macrocode}
+% \end{macro}
+%    \begin{macrocode}
+%</statement>
+%    \end{macrocode}
+%    \begin{macrocode}
+%<*class>
+%    \end{macrocode}
+% \begin{macro}{\maketitlepagestatement}
+% 输出标题页和承诺书，并设置 \cs{frontmatter}。
+%    \begin{macrocode}
+\newcommand{\maketitlepagestatement}{%
+\maketitlepage
+\thispagestyle{empty}
+~
+\vfill\eject
+\thispagestyle{empty}
+\makestatement
+\vfill\eject
+\thispagestyle{empty}
+~
+\vfill\eject
+\setcounter{page}{1}
+\frontmatter
+}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\tableofcontents}
+% 重定义目录命令。
+%    \begin{macrocode}
+\let\savedtableofcontents\tableofcontents
+\renewcommand{\tableofcontents}{%
+  \tableofcontents
+    \ifSDU@opt@double
+    \cleardoublepage
+  \else
+    \clearpage
+  \fi
+  \mainmatter
+}
+%    \end{macrocode}
+% \end{macro}
+%    \begin{macrocode}
+\endinput
+%</class>
+%    \end{macrocode}
 % \Finale
 \endinput

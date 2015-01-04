@@ -117,3 +117,5 @@ sduthesis/
 # test env
 sduthesis.cls
 sduthesis.pdf
+sduthesis-cover.def
+sduthesis-statement.def
