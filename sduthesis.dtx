@@ -325,6 +325,7 @@
 % 载入封面的定义。
 %    \begin{macrocode}
 \input{sduthesis-cover.def}
+\input{sduthesis-statement.def}
 %    \end{macrocode}
 %    \begin{macrocode}
 %</class>
@@ -478,7 +479,7 @@
 %    \begin{macrocode}
 \let\savedtableofcontents\tableofcontents
 \renewcommand{\tableofcontents}{%
-  \tableofcontents
+  \savedtableofcontents
     \ifSDU@opt@double
     \cleardoublepage
   \else
