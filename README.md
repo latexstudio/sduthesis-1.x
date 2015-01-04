@@ -16,6 +16,29 @@ See the License file.
 
 `sduthesis` 遵循不低于 1.3 版本的 LPPL 许可证，详情请查看 LICENSE 文件。
 
+## Installation / 安装
+
+    cd path/to/sduthesis
+    xelatex sduthesis.ins
+    xelatex -shell-escape sduthesis.dtx
+    xelatex -shell-escape sduthesis.dtx
+    xelatex sduthesis-demo.tex
+    xelatex sduthesis-demo.tex
+
+Remove temp-files.
+
+* Put `sduthesis.ins` and `sduthesis.dtx` to `TEXMF/source/latex/sduthesis/`
+* Put `sduthesis.cls`, `*.def` and `figures/' to `TEXMF/tex/latex/sduthesis/`
+* Put the remaining files to `TEXMF/doc/latex/sduthesis/`
+
+中文用户参见用户文档。
+
+## Usage / 用法
+
+See the user manual `sduthesis.pdf` and the demo `sduthesis-demo.tex'.
+
+参见用户文档 `sduthesis.pdf` 及示例文件 `sduthesis-demo.tex`。
+
 ## Author / 作者
 
 Liam Huang
