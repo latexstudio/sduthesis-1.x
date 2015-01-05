@@ -26,7 +26,7 @@
 %% 
 \NeedsTeXFormat{LaTeX2e}[1999/12/01]
 \ProvidesClass{sduthesis}
-  [2015/01/04 v1.2.0b Thesis Template of Shandong University]
+  [2015/01/05 v1.2.0c Thesis Template of Shandong University]
 \RequirePackage{kvoptions}
 \RequirePackage{etoolbox}
 \SetupKeyvalOptions{family=SDU, prefix=SDU@opt@, setkeys=\kvsetkeys}
