@@ -676,6 +676,8 @@ xelatex sduthesis-demo.tex
   \centering
   \begin{minipage}{.85\textwidth}
   \setlength{\parindent}{1.2em}
+  \phantomsection
+  \addcontentsline{toc}{chapter}{ABSTRACT}
 }{
 \end{minipage}
 \end{minipage}
@@ -695,6 +697,8 @@ xelatex sduthesis-demo.tex
   \begin{minipage}[c]{.85\textwidth}
   \setlength{\parindent}{2em}
   \zihao{-4}
+  \phantomsection
+  \addcontentsline{toc}{chapter}{摘要}
 }{
 \end{minipage}
 \end{minipage}
@@ -889,7 +893,6 @@ xelatex sduthesis-demo.tex
   \else
     \clearpage
   \fi
-  \mainmatter
 }
 %    \end{macrocode}
 % \end{macro}
