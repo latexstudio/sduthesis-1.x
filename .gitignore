@@ -122,3 +122,7 @@ sduthesis-statement.def
 make
 quickmake
 sduthesis-demo*
+LICENSE.md
+README.md
+_minted-sduthesis
+sduthesis.hd
